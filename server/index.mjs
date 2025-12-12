@@ -10,7 +10,7 @@ app.use(express.json());
 
 
 const corsOptions = {
-    origin : ['http://localhost:3000'],
+    origin : ['https://dynamic-document.onrender.com'],
  }
 
 app.use( cors(corsOptions) )
