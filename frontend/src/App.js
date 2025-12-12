@@ -112,7 +112,7 @@ function App() {
         items : updated
       }
 
-      const res = await axios.post("http://localhost:4000/quotation", 
+      const res = await axios.post("https://dynamic-document-server.onrender.com/quotation", 
         {
           ...data
         },
