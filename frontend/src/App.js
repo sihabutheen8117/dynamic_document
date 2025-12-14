@@ -37,7 +37,8 @@ function App() {
     work_order_no: '',
     client_req_no: '',
     box_no: '',
-    searchType: 'code'
+    searchType: 'code',
+    work_req : ''
   });
 
   const [searchQuery, setSearchQuery] = useState('');
@@ -130,11 +131,18 @@ function App() {
   
       // Create a URL for the file blob
       const fileURL = window.URL.createObjectURL(new Blob([res.data]));
+
+      const now = new Date();
+
+      const year = now.getFullYear();
+      const month = String(now.getMonth() + 1).padStart(2, "0");
+
+      const file_name = "NBC-" + year +"-"+month+"-" + formData.client_req_no + "-KH" 
   
       // Create a temporary link and click it
       const link = document.createElement("a");
       link.href = fileURL;
-      link.setAttribute("download", "quotation.docx"); 
+      link.setAttribute("download", `"${file_name}".docx`); 
       document.body.appendChild(link);
       link.click();
   
@@ -592,6 +600,19 @@ function App() {
               id="box_no"
               name="box_no"
               value={formData.box_no}
+              onChange={handleInputChange}
+              className="form-input"
+              placeholder="Enter Box Number"
+            />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="work_req" className="form-label">Name of the Work Requester</label>
+            <input
+              type="text"
+              id="work_req"
+              name="work_req"
+              value={formData.work_req}
               onChange={handleInputChange}
               className="form-input"
               placeholder="Enter Box Number"

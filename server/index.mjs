@@ -8,7 +8,7 @@ const app = express();
 
 app.use(express.json());
 
-//http://localhost:4000
+//http://localhost:3000
 //https://dynamic-document.onrender.com
 const corsOptions = {
     origin : ['https://dynamic-document.onrender.com'],
@@ -105,6 +105,7 @@ app.post("/quotation", (req, res) => {
     const work_order_no = data.work_order_no;
     const client_req_no = data.client_req_no ;
     const box_no = data.box_no ;
+    const work_req = data.work_req ;
     const date = formatDate() ;
 
     const total = items.reduce((sum, item) => sum + item.t_price, 0);
@@ -128,6 +129,7 @@ app.post("/quotation", (req, res) => {
             total ,
             vat ,
             ref_no ,
+            work_req,
             g_total,
             items
         });
@@ -139,7 +141,7 @@ app.post("/quotation", (req, res) => {
         res.setHeader("Content-Type",
             "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
         );
-        res.setHeader("Content-Disposition", "attachment; filename=quotation_generated.docx");
+        res.setHeader("Content-Disposition", `attachment; filename="${ref_no}".docx`);
         res.send(buffer);
         
         console.log("✅ Quotation generated successfully");
