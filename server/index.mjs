@@ -8,7 +8,8 @@ const app = express();
 
 app.use(express.json());
 
-
+//http://localhost:4000
+//https://dynamic-document.onrender.com
 const corsOptions = {
     origin : ['https://dynamic-document.onrender.com'],
  }
@@ -43,6 +44,15 @@ app.post("/quotation", (req, res) => {
         let year = d.getFullYear();
       
         return `${day}/${month}/${year}`;
+      }
+
+      function yearAndMonth() {
+        const d = new Date();
+        let month = String(d.getMonth() + 1).padStart(2, "0"); 
+        let year = d.getFullYear();
+      
+        return `${year}-${month}-`;
+
       }
 
     // const items = [
@@ -100,6 +110,7 @@ app.post("/quotation", (req, res) => {
     const total = items.reduce((sum, item) => sum + item.t_price, 0);
     const vat = ( total * ( 1 / 20 ) ) ;
     const g_total = (vat+total).toFixed(2);
+    const ref_no = "NBC-" + yearAndMonth() + client_req_no + "-KH" 
     console.log("g_total : " + g_total )
 
     try {
@@ -116,6 +127,7 @@ app.post("/quotation", (req, res) => {
             date,
             total ,
             vat ,
+            ref_no ,
             g_total,
             items
         });

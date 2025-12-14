@@ -112,6 +112,9 @@ function App() {
         items : updated
       }
 
+      //http://localhost:4000
+      //https://dynamic-document-server.onrender.com/quotation
+
       const res = await axios.post("https://dynamic-document-server.onrender.com/quotation", 
         {
           ...data
@@ -570,7 +573,7 @@ function App() {
           </div>
 
           <div className="form-group">
-            <label htmlFor="client_req_no" className="form-label">Client Request Number</label>
+            <label htmlFor="client_req_no" className="form-label">Location of the Work</label>
             <input
               type="text"
               id="client_req_no"
