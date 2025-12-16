@@ -14,7 +14,29 @@ const corsOptions = {
     origin : ['https://dynamic-document.onrender.com'],
  }
 
-app.use( cors(corsOptions) )
+app.use( cors(corsOptions) );
+
+
+const FILE = "./users.json";
+
+
+const readUsers = () =>
+    fs.existsSync(FILE) ? JSON.parse(fs.readFileSync(FILE)) : [];
+
+const writeUsers = (data) =>
+    fs.writeFileSync(FILE, JSON.stringify(data, null, 2));
+
+app.get("/quotation/users", (req, res) => {
+    res.json(readUsers());
+  });
+  
+  
+app.post("/quotation/users", (req, res) => {
+    const users = readUsers();
+    users.push(req.body);
+    writeUsers(users);
+    res.json({ success: true });
+  });
 
 
 app.post("/quotation", (req, res) => {
@@ -107,10 +129,31 @@ app.post("/quotation", (req, res) => {
     const box_no = data.box_no ;
     const work_req = data.work_req ;
     const date = formatDate() ;
+    const email_req = data.email_req ;
 
     const total = items.reduce((sum, item) => sum + item.t_price, 0);
-    const vat = ( total * ( 1 / 20 ) ) ;
-    const g_total = (vat+total).toFixed(2);
+    const vat = total * (1 / 20);
+    const g_total = total + vat;
+
+    console.log(total)
+    console.log(vat)
+    console.log(g_total)
+  
+
+
+
+
+    const totalFixed = total.toFixed(2);
+    const vatFixed = vat.toFixed(2);
+    const gTotalFixed = g_total.toFixed(2);
+
+
+    console.log(totalFixed)
+    console.log(vatFixed)
+    console.log(gTotalFixed)
+
+
+    
     const ref_no = "NBC-" + yearAndMonth() + client_req_no + "-KH" 
     console.log("g_total : " + g_total )
 
@@ -126,12 +169,13 @@ app.post("/quotation", (req, res) => {
             client_req_no,
             box_no ,
             date,
-            total ,
-            vat ,
+            totalFixed ,
+            vatFixed ,
             ref_no ,
             work_req,
-            g_total,
-            items
+            gTotalFixed,
+            items ,
+            email_req
         });
 
         doc.render();

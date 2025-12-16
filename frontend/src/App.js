@@ -6,6 +6,13 @@ import { useQuery } from "@tanstack/react-query";
 
 function App() {
 
+  
+      //http://localhost:4000/quotation
+      //https://dynamic-document-server.onrender.com/quotation
+
+
+  const API_URL = 'https://dynamic-document-server.onrender.com/quotation'
+
 
 
   // Sample JSON data
@@ -38,13 +45,20 @@ function App() {
     client_req_no: '',
     box_no: '',
     searchType: 'code',
-    work_req : ''
+    work_req : '',
+    email_req : ''
   });
 
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedItems, setSelectedItems] = useState([]);
   const [searchResults, setSearchResults] = useState([]);
   const [showResults, setShowResults] = useState(false);
+
+  const [users, setUsers] = useState([]);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [loading, setLoading] = useState(false);
+
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -103,10 +117,15 @@ function App() {
   const downloadQuotation = async () => {
     try {
 
+      formData.work_req = name ;
+      formData.email_req = email ;
+
       const updated = selectedItems.map((item, index) => ({
         ...item,
         sl_no: index + 1
       }));
+
+      
 
       const data = {
         ...formData ,
@@ -116,7 +135,7 @@ function App() {
       //http://localhost:4000
       //https://dynamic-document-server.onrender.com/quotation
 
-      const res = await axios.post("https://dynamic-document-server.onrender.com/quotation", 
+      const res = await axios.post(API_URL, 
         {
           ...data
         },
@@ -124,7 +143,7 @@ function App() {
         responseType: "blob", 
         headers: {
           "Content-Type": "application/json",
-        },   // IMPORTANT
+        },   
       });
   
       console.log(res)
@@ -139,7 +158,6 @@ function App() {
 
       const file_name = "NBC-" + year +"-"+month+"-" + formData.client_req_no + "-KH" 
   
-      // Create a temporary link and click it
       const link = document.createElement("a");
       link.href = fileURL;
       link.setAttribute("download", `"${file_name}".docx`); 
@@ -151,6 +169,57 @@ function App() {
   
     } catch (err) {
       console.error("Download error:", err);
+    }
+  };
+
+
+  const handleNameSelect = (value) => {
+    setName(value);
+    const found = users.find(u => u.name === value);
+    setEmail(found ? found.email : "");
+  };
+
+
+  const saveUser = async () => {
+    if (!name || !email) {
+      alert("Name and Email required");
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      await axios.post(`${API_URL}/users`, {
+        name,
+        email,
+      });
+
+      // Refresh users after save
+      await getUsers();
+
+      alert("Saved successfully");
+    } catch (err) {
+      if (err.response?.status === 409) {
+        alert("Name already exists");
+      } else {
+        alert("Save failed");
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(()=>{
+    getUsers ();
+  },[])
+
+  const getUsers = async () => {
+    try {
+      const res = await fetch(`${API_URL}/users`);
+      const data = await res.json();
+      setUsers(data);
+    } catch (err) {
+      console.error("Failed to fetch users", err);
     }
   };
 
@@ -607,17 +676,56 @@ function App() {
           </div>
 
           <div className="form-group">
-            <label htmlFor="work_req" className="form-label">Name of the Work Requester</label>
-            <input
-              type="text"
-              id="work_req"
-              name="work_req"
-              value={formData.work_req}
-              onChange={handleInputChange}
-              className="form-input"
-              placeholder="Enter Box Number"
-            />
-          </div>
+  <label htmlFor="user_select" className="form-label">Select Name</label>
+  <select 
+    id="user_select"
+    value={name} 
+    onChange={e => handleNameSelect(e.target.value)}
+    className="form-input"
+  >
+    <option value="">-- Select a name --</option>
+    {users.map((u, i) => (
+      <option key={i} value={u.name}>
+        {u.name}
+      </option>
+    ))}
+  </select>
+</div>
+
+<div className="form-group">
+  <label htmlFor="name_input" className="form-label">Name</label>
+  <input
+    type="text"
+    id="name_input"
+    placeholder="Enter Name"
+    value={name}
+    onChange={e => setName(e.target.value)}
+    className="form-input"
+  />
+</div>
+
+<div className="form-group">
+  <label htmlFor="email_input" className="form-label">Email</label>
+  <input
+    type="email"
+    id="email_input"
+    placeholder="Enter Email"
+    value={email}
+    onChange={e => setEmail(e.target.value)}
+    className="form-input"
+  />
+</div>
+
+<button 
+  onClick={saveUser} 
+  disabled={loading}
+  className="download-button"
+>
+  {loading ? "Saving..." : "Save User"}
+</button>
+
+
+
 
           {selectedItems.length > 0 && (
             <div className="selected-items">
