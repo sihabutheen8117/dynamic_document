@@ -3,8 +3,19 @@ import fs from "fs";
 import PizZip from "pizzip";
 import Docxtemplater from "docxtemplater";
 import cors from 'cors'
+import dotenv from 'dotenv'
+import mongoose from "mongoose";
+import { Excel } from './mongoose/Excel.mjs'
+
+dotenv.config()
 
 const app = express();
+
+mongoose.connect(process.env.MONGO_DB_CONNECT)
+    .then( ()=> {
+      console.log("Connected to Database")
+    })
+    .catch( (err) => console.log(err))
 
 app.use(express.json());
 
@@ -26,12 +37,27 @@ const readUsers = () =>
 const writeUsers = (data) =>
     fs.writeFileSync(FILE, JSON.stringify(data, null, 2));
 
-app.get("/quotation/users", (req, res) => {
-    res.json(readUsers());
+app.get("/quotation/users", async(req, res) => {
+    const excel = await Excel.find(
+        {},
+        { _id: 0, name: 1, email: 1 }
+      );
+
+    console.log(excel)
+    res.json(excel);
   });
   
   
-app.post("/quotation/users", (req, res) => {
+app.post("/quotation/users", async(req, res) => {
+    console.log(req.body)
+
+    const { name , email } = req.body ;
+
+    const user = await Excel.create({
+        name,
+        email,
+      });
+
     const users = readUsers();
     users.push(req.body);
     writeUsers(users);

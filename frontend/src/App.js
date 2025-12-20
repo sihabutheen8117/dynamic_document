@@ -15,21 +15,6 @@ function App() {
 
 
 
-  // Sample JSON data
-  // const itemsData = [
-  //   {"item_code":"41:4104:41043","desc":"Termites Insect (Pest Control) Treatment. Scope of Works: \n*drill and inject the door frame with pesticide\n*The new frame will be treated and spray with anti-termite protection material\n*Spray pesticide","qty":1,"u_price":337.96,"t_price":337.96},
-  //   {"item_code":"41:4103:410305","desc":"Cleaning work - G Floor villa (inside only)","qty":1,"u_price":1275.0,"t_price":1275.0},
-  //   {"item_code":"41:4103:410306","desc":"Cleaning work- 1st Floor villa (inside only)","qty":1,"u_price":1325.0,"t_price":1325.0},
-  //   {"item_code":"41:4103:410307","desc":"G+1 villa full Cleaning (inside & outside)","qty":1,"u_price":2782.5,"t_price":2782.5},
-  //   {"item_code":"41:4103:410308","desc":"Swimming pool cleaning","qty":1,"u_price":447.03,"t_price":447.03},
-  //   {"item_code":"41:4103:410309","desc":"Swimming pool water refilling / 5000 Gallons","qty":1,"u_price":1450.0,"t_price":1450.0},
-  //   {"item_code":"41:4103:410310","desc":"Floor tiles Acid cleaning/ price per square meter","qty":1,"u_price":12.5,"t_price":12.5},
-  //   {"item_code":"41:4103:410311","desc":"Deep Cleaning (Studio)","qty":1,"u_price":252.0,"t_price":252.0},
-  //   {"item_code":"41:4103:410312","desc":"Deep Cleaning (1BR)","qty":1,"u_price":346.5,"t_price":346.5},
-  //   {"item_code":"41:4103:410313","desc":"Deep Cleaning (2BR)","qty":1,"u_price":420.0,"t_price":420.0},
-  //   {"item_code":"41:4103:410314","desc":"Deep Cleaning (Commercial, Office & Retail)","qty":1,"u_price":472.5,"t_price":472.5},
-  //   {"item_code":"41:4103:410315","desc":"G+1 villa Deep Cleaning (inside & outside) scrubbing chemical & jet washing, windows glass","qty":1,"u_price":525.0,"t_price":525.0}
-  // ];
 
   const [itemsData, setitemsData] = useState([]);
 
